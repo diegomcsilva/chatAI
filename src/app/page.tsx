@@ -5,17 +5,22 @@ import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from "@/components/ui/card";
 import { generateContent } from "@/components/ui/chat-bot";
 import { Input } from "@/components/ui/input";
-import { useState } from "react";
+import { SetStateAction, useState } from "react";
 
 export default function Home() {
   const [input, setInput] = useState("");
-  const [contents, setContents] = useState([]);
+  interface Content {
+    role: string;
+    parts: { text: string }[];
+  }
 
-  const handleInputChange = (event) => {
+  const [contents, setContents] = useState<Content[]>([]);
+
+  const handleInputChange = (event: { target: { value: SetStateAction<string>; }; }) => {
     setInput(event.target.value);
   }
 
-  const handleFormSubmit = async (event) => {
+  const handleFormSubmit = async (event: { preventDefault: () => void; }) => {
     const newContents = contents;
     event.preventDefault();
     console.log(input);
