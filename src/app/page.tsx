@@ -63,7 +63,7 @@ export default function Home() {
                   </Avatar>
                   <p className="leading-relaxed">
                     <span className="block font-bold text-slate-700">{content.role}:</span>
-                    {content.parts.map(part => <p>{part.text}</p>)}
+                    {content.parts.map(part => <p key={`content-${part.text}`}>{part.text}</p>)}
                   </p>
                 </div>
               );
