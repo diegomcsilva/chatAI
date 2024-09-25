@@ -56,10 +56,10 @@ export default function Home() {
           {
             contents.map(content => {
               return (
-                <div className="flex gap-3 text-slate-600 text-small">
+                <div key={content?.parts[0]?.text} className="flex gap-3 text-slate-600 text-small">
                   <Avatar>
                     <AvatarFallback>{content.role}</AvatarFallback>
-                    <AvatarImage src={`https://github.com/${content.role === 'user' ? 'diegomcsilva' : 'devrayanco'}.png`} />
+                    <AvatarImage src={`h  ttps://github.com/${content.role === 'user' ? 'diegomcsilva' : 'devrayanco'}.png`} />
                   </Avatar>
                   <p className="leading-relaxed">
                     <span className="block font-bold text-slate-700">{content.role}:</span>
