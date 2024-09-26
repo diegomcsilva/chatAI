@@ -7,6 +7,15 @@ import { generateContent } from "@/components/ui/chat-bot";
 import { Input } from "@/components/ui/input";
 import { SetStateAction, useState } from "react";
 
+function suggestLink() {
+  // Substitua 'seu_link' pelo link desejado
+  const link = 'https://seu_link_para_blusas';
+  return `Você está procurando por blusas? Confira este link: ${link}`;
+  // Você pode personalizar a forma como o link é apresentado, por exemplo, usando um modal ou redirecionando o usuário.
+}
+
+
+
 export default function Home() {
   const [input, setInput] = useState("");
   interface Content {
@@ -20,32 +29,49 @@ export default function Home() {
     setInput(event.target.value);
   }
 
+  function analyzeUserInput(contents, input: string) {
+    // Expressão regular para verificar se a palavra "blusa" está presente
+    const blusaRegex = /blusa/i; // 'i' para ignorar maiúsculas e minúsculas
+  
+    if (blusaRegex.test(input)) {
+      // Se a palavra "blusa" foi encontrada, sugerir o link
+      return suggestLink();
+    } else {
+      // Caso contrário, mostrar uma mensagem ou realizar outra ação
+      return generateContent(contents, input)
+    }
+  }
+
   const handleFormSubmit = async (event: { preventDefault: () => void; }) => {
-    const newContents = contents;
     event.preventDefault();
-    console.log(input);
 
-    newContents.push({
-      role: 'user',
-      parts: [
-        {
-          text: input
-        }
-      ]
-    });
+    analyzeUserInput(input);
 
-    setContents(newContents);
+    setContents(content => ([
+      ...content,
+      {
+        role: 'user',
+        parts: [
+          {
+            text: input
+          }
+        ]
+      }
+    ]));
 
-    const result = await generateContent(newContents);
+    const result = await analyzeUserInput(contents, input);
 
-    newContents.push({
-      role: 'model',
-      parts: [
-        {
-          text: result?.candidates[0]?.content?.parts[0]?.text
-        }
-      ]
-    });
+    setContents(content => ([
+      ...content,
+      {
+        role: 'model',
+        parts: [
+          {
+            text: result as string
+          }
+        ]
+      }
+    ]));
 
     setInput("");
   }
@@ -59,41 +85,21 @@ export default function Home() {
         </CardHeader>
         <CardContent className="space-y-4">
           {
-            contents.map(content => {
+            contents.map((content, index) => {
               return (
-                <div key={content?.parts[0]?.text} className="flex gap-3 text-slate-600 text-small">
+                <div key={index} className="flex gap-3 text-slate-600 text-small">
                   <Avatar>
                     <AvatarFallback>{content.role}</AvatarFallback>
                     <AvatarImage src={`h  ttps://github.com/${content.role === 'user' ? 'diegomcsilva' : 'devrayanco'}.png`} />
                   </Avatar>
                   <p className="leading-relaxed">
                     <span className="block font-bold text-slate-700">{content.role}:</span>
-                    {content.parts.map(part => <p key={`content-${part.text}`}>{part.text}</p>)}
+                    {content.parts.map(part => <span key={`content-${part.text}`}>{part.text}</span>)}
                   </p>
                 </div>
               );
             })
           }
-          {/* <div className="flex gap-3 text-slate-600 text-small">
-            <Avatar>
-              <AvatarFallback>Chat</AvatarFallback>
-              <AvatarImage src="https://github.com/diegomcsilva.png" />
-            </Avatar>
-            <p className="leading-relaxed">
-              <span className="block font-bold text-slate-700">Humano:</span>
-              {prompt.map(item => <p>{item}</p>)}
-            </p>
-          </div>
-          <div className="flex gap-3 text-slate-600 text-small">
-            <Avatar>
-              <AvatarFallback>Chat</AvatarFallback>
-              <AvatarImage src="https://github.com/devrayanco.png" />
-            </Avatar>
-            <p className="leading-relaxed">
-              <span className="block font-bold text-slate-700">Humano:</span>
-              {response.map(item2 => <p>{item2}</p>)}
-            </p>
-          </div> */}
         </CardContent>
         <CardFooter className="space-x-2">
           <Input placeholder="Como posso ajudar você" value={input}
