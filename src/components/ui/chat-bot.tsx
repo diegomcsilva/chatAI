@@ -1,6 +1,4 @@
-import { GoogleGenerativeAI,  HarmCategory,
-  HarmBlockThreshold,
-  Part, } from "@google/generative-ai";
+import { GoogleGenerativeAI} from "@google/generative-ai";
 
 // const { TextServiceClient } = require("@google-ai/generativelanguage").v1beta2;
 // import { v1beta2 } from "@google-ai/generativelanguage";

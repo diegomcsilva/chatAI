@@ -8,13 +8,9 @@ import { Input } from "@/components/ui/input";
 import { SetStateAction, useState } from "react";
 
 function suggestLink() {
-  // Substitua 'seu_link' pelo link desejado
   const link = 'https://seu_link_para_blusas';
   return `Você está procurando por blusas? Confira este link: ${link}`;
-  // Você pode personalizar a forma como o link é apresentado, por exemplo, usando um modal ou redirecionando o usuário.
 }
-
-
 
 export default function Home() {
   const [input, setInput] = useState("");
@@ -29,7 +25,7 @@ export default function Home() {
     setInput(event.target.value);
   }
 
-  function analyzeUserInput(contents, input: string) {
+  function analyzeUserInput(contents: [], input: string) {
     // Expressão regular para verificar se a palavra "blusa" está presente
     const blusaRegex = /blusa/i; // 'i' para ignorar maiúsculas e minúsculas
   
@@ -45,8 +41,6 @@ export default function Home() {
   const handleFormSubmit = async (event: { preventDefault: () => void; }) => {
     event.preventDefault();
 
-    analyzeUserInput(input);
-
     setContents(content => ([
       ...content,
       {
@@ -59,7 +53,7 @@ export default function Home() {
       }
     ]));
 
-    const result = await analyzeUserInput(contents, input);
+    const result = await analyzeUserInput(contents as [], input);
 
     setContents(content => ([
       ...content,
